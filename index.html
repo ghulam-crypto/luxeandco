@@ -46,6 +46,7 @@
         .product-card:hover .overlay { opacity: 1; }
         .product-card:hover img { transform: scale(1.05); }
         
+        /* Loading Spinner */
         .loader { border: 2px solid #f3f3f3; border-top: 2px solid #D4AF37; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
@@ -140,7 +141,7 @@
 
             <div class="bg-white p-8 shadow-sm mb-12">
                 <h3 class="text-xl font-bold mb-6">Add New Product</h3>
-                <form id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <input type="text" id="p-name" placeholder="Product Name" class="border p-3 w-full" required>
                     <select id="p-category" class="border p-3 w-full">
                         <option value="perfume">Perfume</option>
@@ -151,8 +152,8 @@
                     <input type="text" id="p-image" placeholder="Image URL" class="border p-3 w-full" required>
                     <textarea id="p-desc" placeholder="Description" class="border p-3 w-full col-span-full"></textarea>
                     <input type="text" id="p-sizes" placeholder="Sizes (e.g. S, M, L)" class="border p-3 w-full col-span-full">
-                    <button type="button" onclick="adminAddProduct()" class="bg-luxe-black text-white py-3 uppercase font-bold tracking-widest col-span-full hover:bg-luxe-gold">Upload Item</button>
-                </form>
+                    <button onclick="adminAddProduct()" class="bg-luxe-black text-white py-3 uppercase font-bold tracking-widest col-span-full hover:bg-luxe-gold">Upload Item</button>
+                </div>
             </div>
 
             <h3 class="text-xl font-bold mb-6">Manage Inventory</h3>
@@ -184,31 +185,31 @@
         <h2 class="text-3xl font-serif font-bold mb-2">Get in Touch</h2>
         <p class="text-gray-500 mb-10">Questions about sizing? Custom orders? We're here.</p>
         
-        <form id="contact-form" class="space-y-6 text-left">
+        <div class="space-y-6 text-left">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
                     <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Name</label>
-                    <input type="text" name="name" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors" required>
+                    <input type="text" id="con-name" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors" required>
                 </div>
                 <div>
                     <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Email</label>
-                    <input type="email" name="email" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors" required>
+                    <input type="email" id="con-email" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors" required>
                 </div>
             </div>
             <div>
                 <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Subject</label>
-                <input type="text" name="subject" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors">
+                <input type="text" id="con-subject" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors">
             </div>
             <div>
                 <label class="block text-xs uppercase tracking-widest text-gray-500 mb-2">Message</label>
-                <textarea name="message" rows="4" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors" required></textarea>
+                <textarea id="con-message" rows="4" class="w-full bg-gray-50 border border-gray-200 p-4 focus:outline-none focus:border-luxe-gold transition-colors" required></textarea>
             </div>
             <div class="text-center">
-                <button type="button" onclick="submitContact()" class="px-12 py-4 bg-luxe-black text-white font-bold uppercase tracking-widest text-xs hover:bg-luxe-gold transition-colors">
+                <button onclick="submitContact()" class="px-12 py-4 bg-luxe-black text-white font-bold uppercase tracking-widest text-xs hover:bg-luxe-gold transition-colors">
                     Send Message
                 </button>
             </div>
-        </form>
+        </div>
     </section>
 
     <footer class="bg-gray-100 py-12 border-t border-gray-200">
@@ -352,7 +353,7 @@
                         </div>
                     </div>
 
-                    <button onclick="submitOrder()" id="btn-submit" class="w-full py-5 bg-luxe-black text-white font-bold uppercase tracking-widest text-lg">
+                    <button onclick="submitOrder()" id="btn-submit" class="w-full py-5 bg-luxe-black text-white font-bold uppercase tracking-widest hover:bg-luxe-gold transition-colors text-lg">
                         Submit Order
                     </button>
                 </div>
@@ -388,7 +389,7 @@
                 <h2 class="text-2xl font-serif font-bold mb-6 text-center">Welcome Back</h2>
                 <input type="email" id="login-email" placeholder="Email" class="w-full p-3 border mb-3">
                 <input type="password" id="login-pass" placeholder="Password" class="w-full p-3 border mb-6">
-                <button onclick="handleLogin()" class="w-full bg-luxe-black text-white py-3 uppercase font-bold tracking-widest hover:bg-luxe-gold">Login</button>
+                <button onclick="doLogin()" class="w-full bg-luxe-black text-white py-3 uppercase font-bold tracking-widest hover:bg-luxe-gold">Login</button>
                 <p class="text-center mt-4 text-sm text-gray-500 cursor-pointer" onclick="switchAuth('signup')">New here? Create Account</p>
             </div>
 
@@ -398,7 +399,7 @@
                 <input type="email" id="reg-email" placeholder="Email" class="w-full p-3 border mb-3">
                 <input type="text" id="reg-phone" placeholder="Phone" class="w-full p-3 border mb-3">
                 <input type="password" id="reg-pass" placeholder="Password" class="w-full p-3 border mb-6">
-                <button onclick="handleSignup()" class="w-full bg-luxe-black text-white py-3 uppercase font-bold tracking-widest hover:bg-luxe-gold">Sign Up</button>
+                <button onclick="doSignup()" class="w-full bg-luxe-black text-white py-3 uppercase font-bold tracking-widest hover:bg-luxe-gold">Sign Up</button>
                 <p class="text-center mt-4 text-sm text-gray-500 cursor-pointer" onclick="switchAuth('login')">Already have an account? Login</p>
             </div>
         </div>
@@ -410,28 +411,51 @@
     </div>
 
     <script>
-        // --- GLOBAL VARIABLES ---
+        // ============================================
+        // CONFIGURATION
+        // ============================================
+        // The URL you provided:
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxdv-l9tbdSqfWtbnu1MeoQqz5N0FKcvfhOGwU7YRmwR71AS2-eZJeQXTdsS5E31Iz2-Q/exec';
+
+        // --- GLOBAL STATE ---
         let allProducts = [];
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
-        let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
+        let currentUser = JSON.parse(localStorage.getItem('user')) || null;
         let siteContent = {};
 
-        // --- INITIALIZATION ---
-        window.onload = function() {
-            // Fetch Products
-            google.script.run.withSuccessHandler(function(data) {
-                allProducts = data;
-                renderProducts(allProducts);
-                loadAdminPanelIfAuth();
-            }).getProducts();
+        // --- HELPER: API COMMUNICATOR (USING FETCH) ---
+        async function api(payload) {
+            try {
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' }, // 'text/plain' prevents CORS preflight issues with Google Script
+                    body: JSON.stringify(payload)
+                });
+                return await res.json();
+            } catch (e) {
+                console.error("API Error:", e);
+                alert("Connection Error. Please check your internet.");
+                return { success: false, message: e.toString() };
+            }
+        }
 
-            // Fetch Content
-            google.script.run.withSuccessHandler(function(content) {
-                siteContent = content;
-                document.getElementById('about-content').innerHTML = `<p class="text-gray-400 leading-relaxed font-light">${content.about}</p>`;
-                const faqHTML = content.faq.map(f => `<div class="mb-2"><strong class="text-sm block">${f.q}</strong><span class="text-gray-500 text-sm font-light">${f.a}</span></div>`).join('');
+        // --- INITIALIZATION ---
+        window.onload = async function() {
+            // 1. Fetch Products (Using GET via Fetch)
+            try {
+                const pRes = await fetch(API_URL + '?action=getProducts').then(r => r.json());
+                allProducts = pRes;
+                renderProducts(allProducts);
+            } catch (e) { console.error("Error loading products", e); }
+
+            // 2. Fetch Content (Using GET via Fetch)
+            try {
+                const cRes = await fetch(API_URL + '?action=getSiteContent').then(r => r.json());
+                siteContent = cRes;
+                document.getElementById('about-content').innerHTML = `<p class="text-gray-400 leading-relaxed font-light">${cRes.about}</p>`;
+                const faqHTML = cRes.faq.map(f => `<div class="mb-2"><strong class="text-sm block">${f.q}</strong><span class="text-gray-500 text-sm font-light">${f.a}</span></div>`).join('');
                 document.getElementById('faq-section').innerHTML += faqHTML;
-            }).getSiteContent();
+            } catch (e) { console.error("Error loading content", e); }
 
             updateCartUI();
             checkUserStatus();
@@ -440,7 +464,10 @@
         // --- PRODUCTS UI ---
         function renderProducts(items) {
             const grid = document.getElementById('product-grid');
-            if(items.length === 0) { grid.innerHTML = '<div class="col-span-full text-center py-10">No products found.</div>'; return; }
+            if(items.length === 0) { 
+                grid.innerHTML = '<div class="col-span-full text-center py-10">No products found.</div>'; 
+                return; 
+            }
             grid.innerHTML = items.map(p => `
                 <div class="product-card group cursor-pointer">
                     <div class="relative overflow-hidden mb-4 bg-gray-100 aspect-[3/4]">
@@ -579,7 +606,7 @@
             document.getElementById('bank-info').classList.toggle('hidden', type !== 'bank');
         }
 
-        function submitOrder() {
+        async function submitOrder() {
             const btn = document.getElementById('btn-submit');
             
             // Validation
@@ -599,6 +626,7 @@
             const total = (subtotal + 250).toFixed(2); // With Shipping
 
             const orderData = {
+                action: 'order',
                 email: email,
                 items: cart,
                 total: total,
@@ -617,25 +645,26 @@
             btn.innerText = "Processing...";
             btn.disabled = true;
 
-            google.script.run.withSuccessHandler(function(res){
-                if(res.success) {
-                    cart = [];
-                    localStorage.setItem('cart', JSON.stringify(cart));
-                    document.body.innerHTML = `
-                        <div class="flex flex-col items-center justify-center h-screen bg-gray-50 text-center px-4">
-                            <div class="text-6xl text-luxe-gold mb-4"><i class="fas fa-check-circle"></i></div>
-                            <h1 class="text-3xl font-serif font-bold mb-2">Order Placed!</h1>
-                            <p class="text-gray-600 mb-6">Thank you ${fname}. An email confirmation has been sent to ${email}.</p>
-                            <p class="font-bold mb-8">Order ID: ${res.orderId}</p>
-                            <button onclick="window.location.reload()" class="bg-luxe-black text-white px-8 py-3 uppercase font-bold">Continue Shopping</button>
-                        </div>
-                    `;
-                } else {
-                    alert("Error: " + res.message);
-                    btn.innerText = "Submit Order";
-                    btn.disabled = false;
-                }
-            }).processOrder(orderData);
+            // Call API
+            const res = await api(orderData);
+
+            if(res.success) {
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                document.body.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-screen bg-gray-50 text-center px-4">
+                        <div class="text-6xl text-luxe-gold mb-4"><i class="fas fa-check-circle"></i></div>
+                        <h1 class="text-3xl font-serif font-bold mb-2">Order Placed!</h1>
+                        <p class="text-gray-600 mb-6">Thank you ${fname}. An email confirmation has been sent to ${email}.</p>
+                        <p class="font-bold mb-8">Order ID: ${res.orderId}</p>
+                        <button onclick="window.location.reload()" class="bg-luxe-black text-white px-8 py-3 uppercase font-bold">Continue Shopping</button>
+                    </div>
+                `;
+            } else {
+                alert("Error: " + res.message);
+                btn.innerText = "Submit Order";
+                btn.disabled = false;
+            }
         }
 
         // --- AUTH LOGIC ---
@@ -646,53 +675,58 @@
             }
         }
 
-        function handleLogin() {
+        async function doLogin() {
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             
-            google.script.run.withSuccessHandler(function(res) {
-                if(res.success) {
-                    currentUser = res;
-                    localStorage.setItem('currentUser', JSON.stringify(res));
-                    checkUserStatus();
-                    toggleAuthModal();
-                    showToast("Welcome back, " + res.name);
-                } else {
-                    alert(res.message);
-                }
-            }).loginUser(email, pass);
+            const res = await api({ action: 'login', email: email, password: pass });
+            
+            if(res.success) {
+                currentUser = res;
+                localStorage.setItem('user', JSON.stringify(res)); // Match 'user' key used in variable init
+                checkUserStatus();
+                toggleAuthModal();
+                showToast("Welcome back, " + res.name);
+            } else {
+                alert(res.message);
+            }
         }
 
-        function handleSignup() {
+        async function doSignup() {
             const data = {
+                action: 'register',
                 name: document.getElementById('reg-name').value,
                 email: document.getElementById('reg-email').value,
                 phone: document.getElementById('reg-phone').value,
                 password: document.getElementById('reg-pass').value
             };
             
-            google.script.run.withSuccessHandler(function(res) {
-                if(res.success) {
-                    alert(res.message);
-                    switchAuth('login');
-                } else {
-                    alert(res.message);
-                }
-            }).registerUser(data);
+            const res = await api(data);
+            
+            if(res.success) {
+                alert(res.message);
+                switchAuth('login');
+            } else {
+                alert(res.message);
+            }
         }
 
+        // --- ADMIN LOGIC ---
         function loadAdminPanelIfAuth() {
             if (currentUser && currentUser.role === 'admin') {
                 document.getElementById('nav-admin').classList.remove('hidden');
                 document.getElementById('admin').classList.remove('hidden');
-                // Load Stats
-                google.script.run.withSuccessHandler(function(stats){
-                    document.getElementById('admin-revenue').innerText = 'Rs ' + stats.totalRevenue;
-                    document.getElementById('admin-orders').innerText = stats.totalOrders;
-                    document.getElementById('admin-products-count').innerText = stats.totalProducts;
-                }).getAdminStats();
-                // Load Admin Product List
+                loadAdminStats();
                 renderAdminList();
+            }
+        }
+
+        async function loadAdminStats() {
+            const s = await api({ action: 'getStats' });
+            if (s) {
+                document.getElementById('admin-revenue').innerText = 'Rs ' + s.totalRevenue;
+                document.getElementById('admin-orders').innerText = s.totalOrders;
+                document.getElementById('admin-products-count').innerText = s.totalProducts;
             }
         }
 
@@ -709,10 +743,8 @@
             `).join('');
         }
 
-        // --- SECURITY UPDATED ADMIN FUNCTIONS ---
-        // Passing currentUser.email so backend can verify Admin status
-        function adminAddProduct() {
-            if(!currentUser) { alert("Session expired. Please login again."); return; }
+        async function adminAddProduct() {
+            if(!currentUser) { alert("Session expired."); return; }
             
             const product = {
                 name: document.getElementById('p-name').value,
@@ -723,31 +755,23 @@
                 size_guide: document.getElementById('p-sizes').value
             };
             
-            google.script.run.withSuccessHandler(function(res) {
-                if(res.success) { alert("Product Added!"); window.location.reload(); }
-                else { alert(res.message); }
-            }).adminAddProduct(product, currentUser.email);
+            const res = await api({ action: 'addProduct', product: product, userEmail: currentUser.email });
+            if(res.success) { alert("Product Added!"); window.location.reload(); }
+            else { alert(res.message); }
         }
 
-        function adminDelete(id) {
+        async function adminDelete(id) {
             if(!currentUser) { alert("Session expired."); return; }
-            
             if(confirm("Are you sure you want to delete this item?")) {
-                google.script.run.withSuccessHandler(function(res){ 
-                    if(res.success) window.location.reload();
-                    else alert(res.message);
-                }).adminDeleteProduct(id, currentUser.email);
+                const res = await api({ action: 'deleteProduct', id: id, userEmail: currentUser.email });
+                if(res.success) window.location.reload();
+                else alert(res.message);
             }
         }
 
-        // --- UI UTILS ---
-        function submitContact() {
-            const form = document.getElementById('contact-form');
-            const data = { name: form.name.value, email: form.email.value, subject: form.subject.value, message: form.message.value };
-            google.script.run.withSuccessHandler(function(msg) { alert(msg); form.reset(); }).submitContactForm(data);
-        }
-
-        function toggleCart() {
+        // --- UI UTILS & EVENT HANDLERS ---
+        // Expose functions to window for onclick attributes
+        window.toggleCart = function() {
             const modal = document.getElementById('cart-modal');
             const panel = document.getElementById('cart-panel');
             if (modal.classList.contains('hidden')) {
@@ -757,13 +781,34 @@
                 panel.classList.add('translate-x-full');
                 setTimeout(() => modal.classList.add('hidden'), 300);
             }
-        }
+        };
 
-        function toggleAuthModal() { document.getElementById('auth-modal').classList.toggle('hidden'); }
-        function switchAuth(type) {
+        window.toggleAuthModal = function() { document.getElementById('auth-modal').classList.toggle('hidden'); };
+        
+        window.switchAuth = function(type) {
             document.getElementById('login-form-box').classList.toggle('hidden', type !== 'login');
             document.getElementById('signup-form-box').classList.toggle('hidden', type !== 'signup');
-        }
+        };
+
+        window.handleLogin = doLogin; // Map HTML onclick to async function
+        window.handleSignup = doSignup;
+
+        window.submitContact = async function() {
+            const name = document.getElementById('con-name').value;
+            const email = document.getElementById('con-email').value;
+            const subject = document.getElementById('con-subject').value;
+            const message = document.getElementById('con-message').value;
+            
+            const res = await api({ action: 'contact', name, email, subject, message });
+            alert(res.message);
+            if(res.success) {
+                document.getElementById('con-name').value = '';
+                document.getElementById('con-email').value = '';
+                document.getElementById('con-subject').value = '';
+                document.getElementById('con-message').value = '';
+            }
+        };
+
         function showToast(msg) {
             const toast = document.getElementById('toast');
             document.getElementById('toast-msg').innerText = msg;
