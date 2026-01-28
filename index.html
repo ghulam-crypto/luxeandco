@@ -157,7 +157,7 @@
 
             <h3 class="text-xl font-bold mb-6">Manage Inventory</h3>
             <div id="admin-product-list" class="space-y-4">
-            </div>
+                </div>
         </div>
     </section>
 
@@ -175,7 +175,7 @@
                 </div>
                 <div id="faq-section" class="mt-8 border-t border-gray-800 pt-8">
                     <h3 class="text-luxe-gold font-serif text-xl mb-4">F.A.Q</h3>
-                </div>
+                    </div>
             </div>
         </div>
     </section>
@@ -360,7 +360,7 @@
 
             <div class="bg-gray-50 p-8 md:p-12 border-l border-gray-200 hidden md:block">
                 <div id="checkout-summary" class="sticky top-12 space-y-6">
-                </div>
+                    </div>
                 <div class="sticky top-64 border-t border-gray-200 pt-6 space-y-2">
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-600">Subtotal</span>
@@ -410,54 +410,28 @@
     </div>
 
     <script>
-        // --- API CONFIGURATION ---
-        const API_URL = "https://script.google.com/macros/s/AKfycbzzgnZNhdo9kjCpKLAtezClqaVbZ1AZeRFGTAUNmPLC0WZU2qEXQf7fSs-WiqlqN85E-w/exec";
-
         // --- GLOBAL VARIABLES ---
         let allProducts = [];
         let cart = JSON.parse(localStorage.getItem('cart')) || [];
         let currentUser = JSON.parse(localStorage.getItem('currentUser')) || null;
         let siteContent = {};
 
-        // --- HELPER FOR API REQUESTS (REPLACES google.script.run) ---
-        async function apiRequest(action, payload = {}) {
-            // We append the action to the payload so the backend knows what to do
-            const bodyData = { action: action, ...payload };
-            
-            try {
-                const response = await fetch(API_URL, {
-                    method: "POST", // POST is safer for sending data to GAS
-                    body: JSON.stringify(bodyData)
-                });
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error("API Error:", error);
-                alert("Connection error. Please try again.");
-                return null;
-            }
-        }
-
         // --- INITIALIZATION ---
         window.onload = function() {
             // Fetch Products
-            apiRequest('getProducts').then(data => {
-                if (data) {
-                    allProducts = data;
-                    renderProducts(allProducts);
-                    loadAdminPanelIfAuth();
-                }
-            });
+            google.script.run.withSuccessHandler(function(data) {
+                allProducts = data;
+                renderProducts(allProducts);
+                loadAdminPanelIfAuth();
+            }).getProducts();
 
             // Fetch Content
-            apiRequest('getSiteContent').then(content => {
-                if (content) {
-                    siteContent = content;
-                    document.getElementById('about-content').innerHTML = `<p class="text-gray-400 leading-relaxed font-light">${content.about}</p>`;
-                    const faqHTML = content.faq.map(f => `<div class="mb-2"><strong class="text-sm block">${f.q}</strong><span class="text-gray-500 text-sm font-light">${f.a}</span></div>`).join('');
-                    document.getElementById('faq-section').innerHTML += faqHTML;
-                }
-            });
+            google.script.run.withSuccessHandler(function(content) {
+                siteContent = content;
+                document.getElementById('about-content').innerHTML = `<p class="text-gray-400 leading-relaxed font-light">${content.about}</p>`;
+                const faqHTML = content.faq.map(f => `<div class="mb-2"><strong class="text-sm block">${f.q}</strong><span class="text-gray-500 text-sm font-light">${f.a}</span></div>`).join('');
+                document.getElementById('faq-section').innerHTML += faqHTML;
+            }).getSiteContent();
 
             updateCartUI();
             checkUserStatus();
@@ -643,9 +617,8 @@
             btn.innerText = "Processing...";
             btn.disabled = true;
 
-            // Updated to use fetch API
-            apiRequest('processOrder', orderData).then(res => {
-                if(res && res.success) {
+            google.script.run.withSuccessHandler(function(res){
+                if(res.success) {
                     cart = [];
                     localStorage.setItem('cart', JSON.stringify(cart));
                     document.body.innerHTML = `
@@ -658,11 +631,11 @@
                         </div>
                     `;
                 } else {
-                    alert("Error: " + (res ? res.message : "Unknown error"));
+                    alert("Error: " + res.message);
                     btn.innerText = "Submit Order";
                     btn.disabled = false;
                 }
-            });
+            }).processOrder(orderData);
         }
 
         // --- AUTH LOGIC ---
@@ -677,17 +650,17 @@
             const email = document.getElementById('login-email').value;
             const pass = document.getElementById('login-pass').value;
             
-            apiRequest('loginUser', { email: email, pass: pass }).then(res => {
-                if(res && res.success) {
+            google.script.run.withSuccessHandler(function(res) {
+                if(res.success) {
                     currentUser = res;
                     localStorage.setItem('currentUser', JSON.stringify(res));
                     checkUserStatus();
                     toggleAuthModal();
                     showToast("Welcome back, " + res.name);
                 } else {
-                    alert(res ? res.message : "Login failed");
+                    alert(res.message);
                 }
-            });
+            }).loginUser(email, pass);
         }
 
         function handleSignup() {
@@ -698,14 +671,14 @@
                 password: document.getElementById('reg-pass').value
             };
             
-            apiRequest('registerUser', data).then(res => {
-                if(res && res.success) {
+            google.script.run.withSuccessHandler(function(res) {
+                if(res.success) {
                     alert(res.message);
                     switchAuth('login');
                 } else {
-                    alert(res ? res.message : "Signup failed");
+                    alert(res.message);
                 }
-            });
+            }).registerUser(data);
         }
 
         function loadAdminPanelIfAuth() {
@@ -713,13 +686,11 @@
                 document.getElementById('nav-admin').classList.remove('hidden');
                 document.getElementById('admin').classList.remove('hidden');
                 // Load Stats
-                apiRequest('getAdminStats').then(stats => {
-                    if (stats) {
-                        document.getElementById('admin-revenue').innerText = 'Rs ' + stats.totalRevenue;
-                        document.getElementById('admin-orders').innerText = stats.totalOrders;
-                        document.getElementById('admin-products-count').innerText = stats.totalProducts;
-                    }
-                });
+                google.script.run.withSuccessHandler(function(stats){
+                    document.getElementById('admin-revenue').innerText = 'Rs ' + stats.totalRevenue;
+                    document.getElementById('admin-orders').innerText = stats.totalOrders;
+                    document.getElementById('admin-products-count').innerText = stats.totalProducts;
+                }).getAdminStats();
                 // Load Admin Product List
                 renderAdminList();
             }
@@ -738,7 +709,8 @@
             `).join('');
         }
 
-        // --- ADMIN FUNCTIONS ---
+        // --- SECURITY UPDATED ADMIN FUNCTIONS ---
+        // Passing currentUser.email so backend can verify Admin status
         function adminAddProduct() {
             if(!currentUser) { alert("Session expired. Please login again."); return; }
             
@@ -751,20 +723,20 @@
                 size_guide: document.getElementById('p-sizes').value
             };
             
-            apiRequest('adminAddProduct', { product: product, email: currentUser.email }).then(res => {
-                if(res && res.success) { alert("Product Added!"); window.location.reload(); }
-                else { alert(res ? res.message : "Error adding product"); }
-            });
+            google.script.run.withSuccessHandler(function(res) {
+                if(res.success) { alert("Product Added!"); window.location.reload(); }
+                else { alert(res.message); }
+            }).adminAddProduct(product, currentUser.email);
         }
 
         function adminDelete(id) {
             if(!currentUser) { alert("Session expired."); return; }
             
             if(confirm("Are you sure you want to delete this item?")) {
-                apiRequest('adminDeleteProduct', { id: id, email: currentUser.email }).then(res => {
-                    if(res && res.success) window.location.reload();
-                    else alert(res ? res.message : "Error deleting product");
-                });
+                google.script.run.withSuccessHandler(function(res){ 
+                    if(res.success) window.location.reload();
+                    else alert(res.message);
+                }).adminDeleteProduct(id, currentUser.email);
             }
         }
 
@@ -772,10 +744,7 @@
         function submitContact() {
             const form = document.getElementById('contact-form');
             const data = { name: form.name.value, email: form.email.value, subject: form.subject.value, message: form.message.value };
-            apiRequest('submitContactForm', data).then(msg => {
-                alert(msg || "Message sent!");
-                form.reset();
-            });
+            google.script.run.withSuccessHandler(function(msg) { alert(msg); form.reset(); }).submitContactForm(data);
         }
 
         function toggleCart() {
@@ -804,5 +773,3 @@
     </script>
 </body>
 </html>
-
-
